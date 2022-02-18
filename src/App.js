@@ -8,8 +8,21 @@ import {
   useNavigate,
   useMatch,
 } from 'react-router-dom';
-import { Alert, Button, Form, Nav, Navbar, Table } from 'react-bootstrap';
-import { Container } from '@material-ui/core';
+import {
+  Container,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Paper,
+  TextField,
+  Button,
+  AppBar,
+  Toolbar,
+  IconButton,
+} from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 
 const Home = () => (
   <div style={{ padding: '20px' }}>
@@ -39,19 +52,21 @@ const Note = ({ note }) => {
 };
 const Notes = ({ notes }) => (
   <div>
-    <h2>Notes : </h2>
-    <Table striped>
-      <tbody>
-        {notes.map((note) => (
-          <tr key={note.id}>
-            <td>
-              <Link to={`/notes/${note.id}`}>{note.content}</Link>
-            </td>
-            <td>{note.user}</td>
-          </tr>
-        ))}
-      </tbody>
-    </Table>
+    <h2>Notes : </h2>{' '}
+    <TableContainer component={Paper}>
+      <Table>
+        <TableBody>
+          {notes.map((note) => (
+            <TableRow key={note.id}>
+              <TableCell>
+                <Link to={`/notes/${note.id}`}>{note.content}</Link>
+              </TableCell>
+              <TableCell>{note.user}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
   </div>
 );
 const Users = () => (
@@ -81,17 +96,13 @@ const Login = (props) => {
   return (
     <div style={{ padding: '20px' }}>
       <h2>LogIn</h2>
-      <Form onSubmit={onSubmit}>
-        <Form.Group>
-          <Form.Label>UserName :</Form.Label>
-          <Form.Control type='text' name='UserName' />
-          <Form.Label>Password :</Form.Label>
-          <Form.Control type='password' name='password' />
-          <Button type='submit' variant='primary'>
-            Login
-          </Button>
-        </Form.Group>
-      </Form>
+      <form onSubmit={onSubmit}>
+        <TextField label='UserName :' />
+        <TextField label='Password :' type='password' />
+        <Button type='submit' variant='contained' color='primary'>
+          Login
+        </Button>
+      </form>
     </div>
   );
 };
@@ -138,38 +149,34 @@ function App() {
 
   return (
     <Container>
-      <Navbar collapseOnSelect expand='lg' bg='dark' variant='dark'>
-        <Navbar.Toggle aria-controls='responsive-navbar-nav' />
-        <Navbar.Collapse id='responsive-navbar-nav'>
-          <Nav className='mr-auto'>
-            <Nav.Link href='#' as='span'>
-              <Link style={padding} to='/'>
-                home
-              </Link>
-            </Nav.Link>
-            <Nav.Link href='#' as='span'>
-              <Link style={padding} to='/notes'>
-                notes
-              </Link>
-            </Nav.Link>
-            <Nav.Link href='#' as='span'>
-              <Link style={padding} to='/users'>
-                users
-              </Link>
-            </Nav.Link>
-            <Nav.Link href='#' as='span'>
-              {user ? (
-                <em style={padding}>{user} logged in</em>
-              ) : (
-                <Link style={padding} to='/login'>
-                  login
-                </Link>
-              )}
-            </Nav.Link>
-          </Nav>
-        </Navbar.Collapse>
-      </Navbar>
-      {message && <Alert variant='success'>{message}</Alert>}
+      <AppBar possition='static'>
+        <Toolbar>
+          <IconButton
+            edge='start'
+            color='inherit'
+            aria-label='menu'
+          ></IconButton>
+          <Button color='inherit' component={Link} to='/'>
+            home
+          </Button>
+          <Button color='inherit' component={Link} to='/notes'>
+            notes
+          </Button>
+          <Button color='inherit' component={Link} to='/users'>
+            users
+          </Button>
+
+          {user ? (
+            <em>{user} logged in</em>
+          ) : (
+            <Button color='inherit' component={Link} to='/login'>
+              login{' '}
+            </Button>
+          )}
+        </Toolbar>
+      </AppBar>
+
+      {message && <Alert serverity='success'>{message}</Alert>}
       <Routes>
         <Route path='/notes/:id' element={<Note note={note} />} />
         <Route path='/notes' element={<Notes notes={notes} />} />
