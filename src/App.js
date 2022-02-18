@@ -8,6 +8,8 @@ import {
   useNavigate,
   useMatch,
 } from 'react-router-dom';
+import { Alert, Button, Form, Nav, Navbar, Table } from 'react-bootstrap';
+import { Container } from '@material-ui/core';
 
 const Home = () => (
   <div style={{ padding: '20px' }}>
@@ -36,15 +38,20 @@ const Note = ({ note }) => {
   );
 };
 const Notes = ({ notes }) => (
-  <div style={{ padding: '20px' }}>
+  <div>
     <h2>Notes : </h2>
-    <ul>
-      {notes.map((note) => (
-        <Link to={`/notes/${note.id}`} key={note.id}>
-          {note.content} <br />
-        </Link>
-      ))}
-    </ul>
+    <Table striped>
+      <tbody>
+        {notes.map((note) => (
+          <tr key={note.id}>
+            <td>
+              <Link to={`/notes/${note.id}`}>{note.content}</Link>
+            </td>
+            <td>{note.user}</td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
   </div>
 );
 const Users = () => (
@@ -74,15 +81,17 @@ const Login = (props) => {
   return (
     <div style={{ padding: '20px' }}>
       <h2>LogIn</h2>
-      <form onSubmit={onSubmit}>
-        <div>
-          UserName : <input />
-        </div>
-        <div>
-          Password : <input type='password' />
-        </div>
-        <button type='submit'>Login</button>
-      </form>
+      <Form onSubmit={onSubmit}>
+        <Form.Group>
+          <Form.Label>UserName :</Form.Label>
+          <Form.Control type='text' name='UserName' />
+          <Form.Label>Password :</Form.Label>
+          <Form.Control type='password' name='password' />
+          <Button type='submit' variant='primary'>
+            Login
+          </Button>
+        </Form.Group>
+      </Form>
     </div>
   );
 };
@@ -108,6 +117,8 @@ function App() {
     },
   ]);
   const [user, setUser] = useState(null);
+  const [message, setMessage] = useState(null);
+
   const match = useMatch('/notes/:id');
   const note = match
     ? notes.find((note) => note.id === Number(match.params.id))
@@ -115,6 +126,10 @@ function App() {
 
   const login = (user) => {
     setUser(user);
+    setMessage(`Welcome ${user}`);
+    setTimeout(() => {
+      setMessage(null);
+    }, 5000);
   };
 
   const padding = {
@@ -122,25 +137,39 @@ function App() {
   };
 
   return (
-    <div>
-      <div>
-        <Link style={padding} to='/'>
-          home
-        </Link>
-        <Link style={padding} to='/notes'>
-          notes
-        </Link>
-        <Link style={padding} to='/users'>
-          users
-        </Link>
-        {user ? (
-          <em>{user} logged in </em>
-        ) : (
-          <Link to='/login' style={padding}>
-            Login
-          </Link>
-        )}
-      </div>
+    <Container>
+      <Navbar collapseOnSelect expand='lg' bg='dark' variant='dark'>
+        <Navbar.Toggle aria-controls='responsive-navbar-nav' />
+        <Navbar.Collapse id='responsive-navbar-nav'>
+          <Nav className='mr-auto'>
+            <Nav.Link href='#' as='span'>
+              <Link style={padding} to='/'>
+                home
+              </Link>
+            </Nav.Link>
+            <Nav.Link href='#' as='span'>
+              <Link style={padding} to='/notes'>
+                notes
+              </Link>
+            </Nav.Link>
+            <Nav.Link href='#' as='span'>
+              <Link style={padding} to='/users'>
+                users
+              </Link>
+            </Nav.Link>
+            <Nav.Link href='#' as='span'>
+              {user ? (
+                <em style={padding}>{user} logged in</em>
+              ) : (
+                <Link style={padding} to='/login'>
+                  login
+                </Link>
+              )}
+            </Nav.Link>
+          </Nav>
+        </Navbar.Collapse>
+      </Navbar>
+      {message && <Alert variant='success'>{message}</Alert>}
       <Routes>
         <Route path='/notes/:id' element={<Note note={note} />} />
         <Route path='/notes' element={<Notes notes={notes} />} />
@@ -155,7 +184,7 @@ function App() {
         <br />
         <em>Note app, depatement of computer and science</em>
       </div>
-    </div>
+    </Container>
   );
 }
 
