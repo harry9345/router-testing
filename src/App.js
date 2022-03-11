@@ -17,12 +17,40 @@ import {
   TableRow,
   Paper,
   TextField,
-  Button,
   AppBar,
   Toolbar,
   IconButton,
 } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
+import styled from 'styled-components';
+
+const Button = styled.button`
+  background: Bisque;
+  fontsize: 1rem;
+  margin: 1rem;
+  padding: 0.25rem 1rem;
+  border: 2px solid Chocolate;
+  border-darius: 3px;
+`;
+const Input = styled.input`
+  margin: 0.25rem;
+`;
+
+const Page = styled.div`
+  padding: 10rem;
+  backgtound-color: papayawhip;
+`;
+
+const Navigation = styled.div`
+  padding: 1rem;
+  background-color: BurlyWood;
+`;
+
+const Footer = styled.div`
+  padding: 1rem;
+  background-color: Chocolate;
+  margin-top: 1rem;
+`;
 
 const Home = () => (
   <div style={{ padding: '20px' }}>
@@ -97,8 +125,10 @@ const Login = (props) => {
     <div style={{ padding: '20px' }}>
       <h2>LogIn</h2>
       <form onSubmit={onSubmit}>
-        <TextField label='UserName :' />
-        <TextField label='Password :' type='password' />
+        UserName :
+        <Input />
+        Password :
+        <Input type='password' />
         <Button type='submit' variant='contained' color='primary'>
           Login
         </Button>
@@ -148,34 +178,26 @@ function App() {
   };
 
   return (
-    <Container>
-      <AppBar possition='static'>
-        <Toolbar>
-          <IconButton
-            edge='start'
-            color='inherit'
-            aria-label='menu'
-          ></IconButton>
-          <Button color='inherit' component={Link} to='/'>
-            home
-          </Button>
-          <Button color='inherit' component={Link} to='/notes'>
-            notes
-          </Button>
-          <Button color='inherit' component={Link} to='/users'>
-            users
-          </Button>
+    <Page>
+      <Navigation>
+        <Link style={padding} to='/'>
+          home
+        </Link>
+        <Link style={padding} to='/notes'>
+          notes
+        </Link>
+        <Link style={padding} to='/users'>
+          users
+        </Link>
 
-          {user ? (
-            <em>{user} logged in</em>
-          ) : (
-            <Button color='inherit' component={Link} to='/login'>
-              login{' '}
-            </Button>
-          )}
-        </Toolbar>
-      </AppBar>
-
+        {user ? (
+          <em>{user} logged in</em>
+        ) : (
+          <Link style={padding} to='/login'>
+            login{' '}
+          </Link>
+        )}
+      </Navigation>
       {message && <Alert serverity='success'>{message}</Alert>}
       <Routes>
         <Route path='/notes/:id' element={<Note note={note} />} />
@@ -187,11 +209,11 @@ function App() {
         <Route path='/login' element={<Login onLogIn={login} />} />
         <Route path='/' element={<Home />} />
       </Routes>
-      <div style={padding}>
+      <Footer style={padding}>
         <br />
         <em>Note app, depatement of computer and science</em>
-      </div>
-    </Container>
+      </Footer>
+    </Page>
   );
 }
 
